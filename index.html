@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Palette Generator</title>
+    <title>Generatore di Palette Colori</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css">
     <style>
@@ -12,63 +12,101 @@
 	}
         #loading {
             display: none;
-            text-align: center;
-            margin-top: 20px;
-	color: blue;
-	font-size: 40px;
-	font-weight: bolder;
-	font-family: 'Open Sans';
-        }        
-		#result {
-		display: none;
-		}
-        #result img {
-            margin-top: 20px;
+            font-size: 40px;
+            color: blue;
+			text-align: center;
+			font-family: 'Open Sans';
         }
+        .image-container {
+            margin-top: 20px;
+            text-align: center;
+			display: none;
+        }
+        #originalImage {
+        max-width: 600px;
+		height: auto;
+        }		
+		
+		#paletteImage {
+		width: 600px;
+		height: auto;
+		
+        #palette {
+            margin-top: 20px;
+			display: none;			
+        }		
     </style>
 </head>
 <body>
 
-    <h1>Image Palette Generator</h1>
+    <h1>Carica un'immagine per generare una palette di colori</h1>
 
-    <form id="upload-form" enctype="multipart/form-data">
-        <input type="file" name="image" id="image" accept="image/*" required>
-        <button type="submit">Upload Image</button>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="image">Seleziona un'immagine:</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <button type="submit">Carica</button>
     </form>
 
-    <div id="loading">
-        Elaborazione in corso...
+    <div id="loading">Elaborazione in corso, attendere...</div>
+
+    <div class="image-container">
+        <h2>Immagine Originale</h2>
+        <img id="originalImage" src="#" alt="Immagine originale" style="display: none;">
     </div>
 
-    <div id="result">
-		
-        <!-- L'immagine ridimensionata e la palette verranno visualizzate qui -->
-		
+    <div id="palette" class="image-container">
+        <h2>Palette di Colori</h2>
+        <img id="paletteImage" src="#" alt="Immagine della palette" style="display: none;">
     </div>
 
     <script>
-        $('#upload-form').on('submit', function(e) {
-            e.preventDefault();
-            $('#loading').show(); // Mostra l'indicatore di caricamento
-            $('#result').html(''); // Resetta il risultato precedente
-            var formData = new FormData(this);
+        $(document).ready(function() {
+            $('#uploadForm').on('submit', function(e) {
+                e.preventDefault();
 
-            $.ajax({
-                url: 'process_image.php',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    $('#loading').hide(); // Nascondi l'indicatore di caricamento
-                    $('#result').html(response); // Mostra il risultato
-					$('#result').show();
-                },
-                error: function() {
-                    $('#loading').hide();
-                    $('#result').html('Errore durante l\'elaborazione.');
-					$('#result').show();
-                }
+                // Mostra il messaggio di caricamento
+                $('#loading').show();
+                $('#originalImage').hide();
+                $('#paletteImage').hide();
+
+                // Prepara il formData per l'upload
+                var formData = new FormData(this);
+
+                // Esegui la richiesta AJAX
+                $.ajax({
+                    url: 'process_image.php',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // Nascondi il caricamento
+                        $('#loading').hide();
+
+                        try {
+                            // Decodifica il JSON di risposta
+                            var jsonResponse = JSON.parse(response);
+
+                            // Visualizza l'immagine originale
+                            $('#originalImage').attr('src', jsonResponse.original_image).show();
+
+                            // Visualizza l'immagine della palette
+                            $('#paletteImage').attr('src', jsonResponse.palette_image).show();
+							
+							$('.image-container').show();
+							//$('#palette').show();
+
+                        } catch (error) {
+                            alert('Errore durante l\'elaborazione della risposta.');
+                            console.error(error);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        // Nascondi il caricamento e mostra un messaggio di errore
+                        $('#loading').hide();
+                        alert('Errore durante l\'upload dell\'immagine: ' + textStatus);
+                    }
+                });
             });
         });
     </script>
