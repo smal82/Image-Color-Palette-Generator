@@ -68,6 +68,9 @@ Questa applicazione PHP e jQuery permette di caricare un'immagine e generare una
 └── README.md                  # Questo file
 ```
 
+## Demo
+Visualizza una demo [qui](https://smalprova.netsons.org/palette/)
+
 ## Palette d'esempio
 
 ![Palette Image](/palette_image.png)
