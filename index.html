@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Palette Generator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css">
+    <style>
+	body, h1, h2, #result {
+	font-family: 'Open Sans';
+	}
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+	color: blue;
+	font-size: 40px;
+	font-weight: bolder;
+	font-family: 'Open Sans';
+        }        
+		#result {
+		display: none;
+		}
+        #result img {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Image Palette Generator</h1>
+
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="image" id="image" accept="image/*" required>
+        <button type="submit">Upload Image</button>
+    </form>
+
+    <div id="loading">
+        Elaborazione in corso...
+    </div>
+
+    <div id="result">
+		
+        <!-- L'immagine ridimensionata e la palette verranno visualizzate qui -->
+		
+    </div>
+
+    <script>
+        $('#upload-form').on('submit', function(e) {
+            e.preventDefault();
+            $('#loading').show(); // Mostra l'indicatore di caricamento
+            $('#result').html(''); // Resetta il risultato precedente
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: 'process_image.php',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    $('#loading').hide(); // Nascondi l'indicatore di caricamento
+                    $('#result').html(response); // Mostra il risultato
+					$('#result').show();
+                },
+                error: function() {
+                    $('#loading').hide();
+                    $('#result').html('Errore durante l\'elaborazione.');
+					$('#result').show();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
