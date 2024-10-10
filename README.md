@@ -54,7 +54,7 @@ Questa applicazione PHP e jQuery permette di caricare un'immagine e generare una
 
 ## Personalizzazione
 
-- **Soglia di Similitudine dei Colori:** Puoi regolare la soglia di rilevamento della similitudine tra colori modificando la funzione `colorDistance()` in `process.php`. Un valore di soglia più alto comporterà meno colori considerati "simili".
+- **Soglia di Similitudine dei Colori:** Puoi regolare la soglia di rilevamento della similitudine tra colori modificando la funzione `colorDistance()` in `process_image.php`. Un valore di soglia più alto comporterà meno colori considerati "simili".
 - **Personalizzazione del Font:** Puoi utilizzare altri font `.ttf` caricandoli sul server e aggiornando la variabile `$font_path` nel codice.
 
 ## Struttura dei File
@@ -62,11 +62,15 @@ Questa applicazione PHP e jQuery permette di caricare un'immagine e generare una
 ```
 .
 ├── index.html                 # Pagina HTML per il frontend
-├── process_image.php                # Script PHP per l'elaborazione dell'immagine
-├── OpenSans-Regular.ttf        # (File di font caricato)
+├── process_image.php          # Script PHP per l'elaborazione dell'immagine
+├── OpenSans-Regular.ttf       # (File di font caricato)
 ├── uploads/                   # Directory dove vengono salvate le immagini caricate e le palette generate
 └── README.md                  # Questo file
 ```
+
+## Palette d'esempio
+
+![Palette Image](/palette_image.png)
 
 ## Licenza
 
