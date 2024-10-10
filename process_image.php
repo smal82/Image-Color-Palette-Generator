@@ -9,6 +9,17 @@ function generateRandomString($length = 10) {
     return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
 }
 
+// Pulizia delle cartelle più vecchie di 1 ora nella directory uploads
+$upload_dir = 'uploads/';
+$now = time();
+
+foreach (glob($upload_dir . '*', GLOB_ONLYDIR) as $dir) {
+    if ($now - filemtime($dir) > 3600) {
+        array_map('unlink', glob("$dir/*.*")); // Rimuove i file nella cartella
+        rmdir($dir); // Rimuove la cartella
+    }
+}
+
 // Funzione per ottenere i colori dominanti da un'immagine
 function getTopColors($image, $num_colors = 20) {
     $width = imagesx($image);
